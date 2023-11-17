@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     color: #45D7D0;
+    font-family: Arial;
 }
 
 body{
@@ -10,5 +11,5 @@ body{
     background:#1E1E1E ;
     display: flex;
     justify-content: center;
-    align-items: center;
+    text-align: center;
 }

@@ -13,15 +13,18 @@
     <button>Download</button>
   </div>
 
+  <footer>Use a telegram bot to download videos to other devices </footer>
+
 </template>
 
 <style scoped>
 
 .wrapper{
+  margin-top: 50px;
   align-content: center;
   background: #323443;
   width: 120vh;
-  height: 200px;
+  height: 130px;
   border-radius: 50px;
   padding: 50px;
   text-align: center;
@@ -63,5 +66,15 @@
   font-size: 25px;
 }
 
+footer{
+  margin-top: 45vh;
+  color: white;
+  font-size: 30px;
+  border-top: white 2px solid;
+}
+
+h1{
+  margin-top: 20px;
+}
 
 </style>
