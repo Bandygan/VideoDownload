@@ -1,14 +1,14 @@
-*{
-    margin: 0;
+* {
     padding: 0;
     color: #45D7D0;
     font-family: Arial;
 }
 
-body{
+ body {
+     margin: 0;
     width: 100%;
     min-height: 100vh;
-    background:#1E1E1E ;
+    background: #1E1E1E;
     display: flex;
     justify-content: center;
     text-align: center;

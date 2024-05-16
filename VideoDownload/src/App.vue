@@ -1,25 +1,55 @@
-<script setup>
+<template>
+  <div>
+    <h1>TORONTOFOKINO Production</h1>
+    <div class="wrapper">
+      <div class="wrapper_leftzone">
+        <input type="text" placeholder="Get Url">
+        <!-- Добавляем обработчик события клика на кнопку регистрации -->
+        <button
+            @click="openModal">Registration
+        </button>
+        <!-- Вставляем компонент модального окна -->
+        <ModalWindow :isOpen="isModalOpen" @close="closeModal"/>
+      </div>
+      <button>Download</button>
+    </div>
+    <footer>Use a telegram bot to download videos to other devices</footer>
+  </div>
+</template>
+
+<script>
+import ModalWindow from './components/modal-window.vue';
+import {ref} from 'vue';
+
+export default {
+  name: 'App',
+  components: {
+    ModalWindow
+  },
+  data() {
+    return {
+      isModalOpen: true
+    };
+  },
+  methods: {
+    openModal() {
+      this.isModalOpen = true;
+      console.log('Кнопка "Registration" была нажата!');
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    }
+  }
+};
+
 
 </script>
 
-<template>
-  <h1>Download video</h1>
-  <div class="wrapper">
-     <div class="wrapper_leftzone"> <input type="text" placeholder="Get Url">
-          <button>Audio</button>
-          <button>Cut</button>
-     </div>
-
-    <button>Download</button>
-  </div>
-
-  <footer>Use a telegram bot to download videos to other devices </footer>
-
-</template>
 
 <style scoped>
 
-.wrapper{
+
+.wrapper {
   margin-top: 50px;
   align-content: center;
   background: #323443;
@@ -32,16 +62,15 @@
   display: flex;
 }
 
-.wrapper button{
+.wrapper button {
   background: #272727;
   width: 30vh;
   height: 7vh;
   font-size: 25px;
   border-radius: 50px;
-  border: 0;
 }
 
-.wrapper input{
+.wrapper input {
   background: #1D1C1C;
   width: 100%;
   border-radius: 10px;
@@ -51,14 +80,14 @@
 
 }
 
-.wrapper_leftzone{
+.wrapper_leftzone {
   text-align: left;
   margin-right: 50px;
   width: 100%;
 
 }
 
-.wrapper_leftzone button{
+.wrapper_leftzone button {
   margin-top: 10px;
   margin-right: 20px;
   width: 150px;
@@ -66,14 +95,14 @@
   font-size: 25px;
 }
 
-footer{
-  margin-top: 45vh;
+footer {
+  margin-top: 38vh;
   color: white;
   font-size: 30px;
   border-top: white 2px solid;
 }
 
-h1{
+h1 {
   margin-top: 20px;
 }
 
