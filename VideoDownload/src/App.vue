@@ -5,6 +5,7 @@
       <div class="wrapper_leftzone">
         <input type="text" placeholder="Get Url"> <br><br>
         <ModalWindow class="button" :isOpen="isModalOpen" @close="closeModal"/>
+        <LogIn class="button" :isOpen="isModalOpen"/>
       </div>
       <button>Download</button>
     </div>
@@ -15,11 +16,13 @@
 <script>
 import ModalWindow from './components/modal-window.vue';
 import {ref} from 'vue';
+import LogIn from './components/log-in.vue';
 
 export default {
   name: 'App',
   components: {
-    ModalWindow
+    ModalWindow,
+    LogIn
   },
   data() {
     return {
