@@ -3,13 +3,8 @@
     <h1>TORONTOFOKINO Production</h1>
     <div class="wrapper">
       <div class="wrapper_leftzone">
-        <input type="text" placeholder="Get Url">
-        <!-- Добавляем обработчик события клика на кнопку регистрации -->
-        <button
-            @click="openModal">Registration
-        </button>
-        <!-- Вставляем компонент модального окна -->
-        <ModalWindow :isOpen="isModalOpen" @close="closeModal"/>
+        <input type="text" placeholder="Get Url"> <br><br>
+        <ModalWindow class="button" :isOpen="isModalOpen" @close="closeModal"/>
       </div>
       <button>Download</button>
     </div>
@@ -100,6 +95,10 @@ footer {
   color: white;
   font-size: 30px;
   border-top: white 2px solid;
+}
+
+.button{
+  margin-top: 100px;
 }
 
 h1 {
