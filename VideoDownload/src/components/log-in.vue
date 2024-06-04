@@ -65,6 +65,9 @@ export default {
             .post('http://127.0.0.1:8000/api/v1/jwt/create/', formData)
             .then(response => {
               console.log(response)
+
+              this.$router.push('/user')
+
             })
             .catch(error => {
               console.log(error)
