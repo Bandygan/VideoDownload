@@ -1,21 +1,20 @@
 <template>
-  <button @click="setIsOpen(true)">logIn</button>
-
+  <button @click="setIsOpen(true)">Log In</button>
 
   <Dialog :open="isOpen" @close="setIsOpen">
     <div class="modal-back">
       <div class="box-modal">
         <DialogPanel class="dialog-box">
-          <DialogTitle>Sing In</DialogTitle>
-          <dialog-description>
+          <DialogTitle>Sign In</DialogTitle>
+          <DialogDescription>
             <form @submit.prevent="submitForm">
               <label>Username </label>
               <input type="email" name="username" v-model="username"><br><br>
               <label>Password </label>
               <input type="password" name="password" v-model="password"><br><br>
-              <button type="submit">LogIn</button>
+              <button type="submit">Log In</button>
             </form>
-          </dialog-description>
+          </DialogDescription>
         </DialogPanel>
       </div>
     </div>
@@ -23,67 +22,40 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import { ref } from 'vue';
+import { useAuthStore } from '../stores/auth.js';
+import { useRouter } from 'vue-router';
 import {
   Dialog,
   DialogPanel,
   DialogTitle,
   DialogDescription,
-} from '@headlessui/vue'
+} from '@headlessui/vue';
 
-
-const isOpen = ref(false)
+const isOpen = ref(false);
+const username = ref('');
+const password = ref('');
+const authStore = useAuthStore();
+const router = useRouter();
 
 function setIsOpen(value) {
-  isOpen.value = value
+  isOpen.value = value;
 }
-</script>
 
-<script>
-
-import axios from 'axios'
-
-export default {
-  name: 'LogIn',
-  data() {
-    return {
-      username: '',
-      password: ''
-    }
-  },
-  methods: {
-    submitForm(e) {
-      axios.defaults.headers.common['Authorization'] = ''
-      localStorage.removeItem("access")
-
-      const formData = {
-        username: this.username,
-        password: this.password
-      }
-
-      axios
-            .post('http://127.0.0.1:8000/api/v1/jwt/create/', formData)
-            .then(response => {
-              console.log(response)
-
-              this.$router.push('/user')
-
-            })
-            .catch(error => {
-              console.log(error)
-            })
-
-    }
+async function submitForm() {
+  try {
+    await authStore.login(username.value, password.value);
+    setIsOpen(false);
+    router.push('/user');
+  } catch (error) {
+    console.error('Login failed', error);
   }
 }
-
-
 </script>
 
-<style>
-
+<style scoped>
 .dialog-box {
-  padding: 10px 10px 10px 10px;
+  padding: 10px;
   width: 100%;
   max-width: 24rem;
   border-radius: 0.5rem;
@@ -118,7 +90,7 @@ button {
 }
 
 input {
-  background: #1D1C1C;
+  background: #1d1c1c;
   width: 70%;
   border-radius: 10px;
   height: 50px;
