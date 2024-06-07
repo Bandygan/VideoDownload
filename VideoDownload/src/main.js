@@ -6,8 +6,8 @@ import {createPinia} from 'pinia'
 import router from './router'
 
 axios.default.baseURL = "http://127.0.0.1:8000"
-axios.default.headers.common = {'Authorization': `Bearer ${token}`}
-export default axios;
+//axios.default.headers.common = {'Authorization': `Bearer ${token}`}
+//export default axios;
 
 
 const app = createApp(App)
