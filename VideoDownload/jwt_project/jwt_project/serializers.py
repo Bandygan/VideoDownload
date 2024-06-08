@@ -6,4 +6,5 @@ from .models import Link
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Link
-        fields = ['id', 'url', 'created_at']
+        fields = ['id', 'url', 'user', 'created_at']
+        read_only_fields = ['user', 'created_at']

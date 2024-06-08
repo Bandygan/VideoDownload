@@ -5,8 +5,10 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('authToken') || null,
     user: null,
+    links: []
   }),
   actions: {
+    // Auth actions
     setToken(token) {
       this.token = token;
       localStorage.setItem('authToken', token);
@@ -45,8 +47,32 @@ export const useAuthStore = defineStore('auth', {
         throw error;
       }
     },
-  },
-  getters: {
-    isAuthenticated: state => !!state.token,
-  },
+    // User actions
+    async addLink(link) {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.post('http://127.0.0.1:8000/api/v1/add_link/', { link }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.links.push(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchLinks() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://127.0.0.1:8000/api/v1/links/', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.links = response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
 });

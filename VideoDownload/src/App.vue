@@ -14,15 +14,26 @@
 </template>
 
 <script>
+import { defineComponent, onMounted } from 'vue';
+import { useAuthStore } from './stores/auth';
 
-import {RouterLink, RouterView} from 'vue-router'
-
-export default {
+export default defineComponent({
   name: 'App',
+  setup() {
+    const authStore = useAuthStore();
 
-};
+    onMounted(async () => {
+      if (authStore.token) {
+        await authStore.fetchUser();
+        await userStore.fetchLinks();
+      }
+    });
 
-
+    return {
+      isAuthenticated: authStore.isAuthenticated,
+    };
+  },
+});
 </script>
 
 

@@ -14,39 +14,62 @@
         <input type="url" id="newLink" v-model="newLink" required>
         <button type="submit">Add Link</button>
       </form>
+
+      <p v-if="error" class="error">{{ error }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
-import { useUserStore } from '../stores/user';
+import { defineComponent, ref, onMounted, watch } from 'vue';
+import { useAuthStore } from '../stores/auth.js';
 
 export default defineComponent({
   name: 'User',
   setup() {
-    const userStore = useUserStore();
+    const userStore = useAuthStore();
     const newLink = ref('');
+    const error = ref('');
 
     const addNewLink = async () => {
-      await userStore.addLink(newLink.value);
-      newLink.value = '';
+      try {
+        await userStore.addLink(newLink.value);
+        newLink.value = '';
+        error.value = '';
+        await userStore.fetchLinks();  // Refresh the links list after adding a new link
+      } catch (err) {
+        console.error('Error adding link:', err);
+        error.value = 'Failed to add link.';
+      }
     };
 
-    userStore.fetchUser();
-    userStore.fetchLinks();
+    onMounted(async () => {
+      try {
+        await userStore.fetchUser();
+        await userStore.fetchLinks();
+      } catch (err) {
+        console.error('Error fetching user or links:', err);
+        error.value = 'Failed to load user or links.';
+      }
+    });
+
+    watch(() => userStore.links, (newLinks) => {
+      console.log('Links updated:', newLinks);
+    });
 
     return {
       user: userStore.user,
       links: userStore.links,
       newLink,
-      addNewLink
+      addNewLink,
+      error
     };
   }
 });
 </script>
 
 <style scoped>
-
-
+.error {
+  color: red;
+}
 </style>
