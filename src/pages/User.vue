@@ -17,6 +17,8 @@
         <input type="url" id="newLink" v-model="newLink" required>
         <button type="submit">Add Link</button>
       </form>
+
+      <button @click="logout">Logout</button>
     </div>
   </div>
 </template>
@@ -24,6 +26,7 @@
 <script>
 import {defineComponent, ref, watch} from 'vue';
 import {useAuthStore} from '../stores/auth';
+import {useRouter} from 'vue-router'
 
 export default defineComponent({
   name: 'User',
@@ -31,6 +34,7 @@ export default defineComponent({
     const links = ref([]);
     const authStore = useAuthStore();
     const newLink = ref('');
+    const router = useRouter();
 
     const addNewLink = async () => {
       await authStore.addLink(newLink.value);
@@ -45,6 +49,11 @@ export default defineComponent({
       links.value = newValue;
     });
 
+    const logout = () => {
+      authStore.logout();
+      router.push('/');
+    };
+
 
     authStore.fetchUser();
     authStore.fetchLinks();
@@ -54,7 +63,8 @@ export default defineComponent({
       links,
       newLink,
       addNewLink,
-      removeLink
+      removeLink,
+      logout
     };
   }
 });
