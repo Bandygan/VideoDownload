@@ -93,33 +93,3 @@ export const useAuthStore = defineStore('auth', {
 
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-    // try {
-    //     const response = await axios.post('http://127.0.0.1:8000/api/v1/links/', { url: link });
-    //     this.links.push(response.data);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
-
-
-    // async fetchLinks() {
-    //   try {
-    //     const response = await axios.get('http://127.0.0.1:8000/api/v1/links/');
-    //     this.links = response.data;
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
-

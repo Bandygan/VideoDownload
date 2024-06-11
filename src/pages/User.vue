@@ -70,48 +70,6 @@ export default defineComponent({
 });
 </script>
 
-
-<!--<script>-->
-import { defineComponent, ref, watch } from 'vue'; // Импортируем функцию watch
-import { useAuthStore } from '../stores/auth';
-
-export default defineComponent({
-name: 'User',
-setup() {
-const authStore = useAuthStore();
-const newLink = ref('');
-
-const addNewLink = async () => {
-await authStore.addLink(newLink.value);
-newLink.value = '';
-};
-
-const removeLink = async (linkId) => {
-await authStore.deleteLink(linkId);
-};
-
-// Следим за изменениями в списке ссылок и обновляем его
-watch(() => authStore.links, (newValue) => {
-links.value = newValue;
-});
-
-authStore.fetchUser();
-authStore.fetchLinks();
-
-const user = ref(null); // Создаем реактивную переменную для пользователя
-const links = ref([]); // Создаем реактивный массив для ссылок
-
-return {
-user,
-links,
-newLink,
-addNewLink,
-removeLink
-};
-}
-});
-<!--</script>-->
-
 <style scoped>
 
 ul button {
