@@ -24,3 +24,14 @@ class LinkListCreateView(generics.ListCreateAPIView):
         except Exception as e:
             logger.error(f"Error saving link: {e}")
             raise
+
+class LinkDestroyView(generics.DestroyAPIView):
+    serializer_class = LinkSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        try:
+            return Link.objects.filter(user=self.request.user)
+        except Exception as e:
+            logger.error(f"Error fetching queryset: {e}")
+            raise

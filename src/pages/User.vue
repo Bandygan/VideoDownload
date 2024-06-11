@@ -6,7 +6,10 @@
     <div v-if="user">
       <h2>Your Links</h2>
       <ul>
-        <li v-for="link in links" :key="link.id">{{ link.url }}</li>
+        <li v-for="link in links" :key="link.id">
+          {{ link.url }}
+          <button @click="removeLink(link.id)">Delete</button>
+        </li>
       </ul>
 
       <form @submit.prevent="addNewLink">
@@ -14,62 +17,98 @@
         <input type="url" id="newLink" v-model="newLink" required>
         <button type="submit">Add Link</button>
       </form>
-
-      <p v-if="error" class="error">{{ error }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, watch } from 'vue';
-import { useAuthStore } from '../stores/auth.js';
+import {defineComponent, ref, watch} from 'vue';
+import {useAuthStore} from '../stores/auth';
 
 export default defineComponent({
   name: 'User',
   setup() {
-    const userStore = useAuthStore();
+    const links = ref([]);
+    const authStore = useAuthStore();
     const newLink = ref('');
-    const error = ref('');
 
     const addNewLink = async () => {
-      try {
-        await userStore.addLink(newLink.value);
-        newLink.value = '';
-        error.value = '';
-        await userStore.fetchLinks();  // Refresh the links list after adding a new link
-      } catch (err) {
-        console.error('Error adding link:', err);
-        error.value = 'Failed to add link.';
-      }
+      await authStore.addLink(newLink.value);
+      newLink.value = '';
     };
 
-    onMounted(async () => {
-      try {
-        await userStore.fetchUser();
-        await userStore.fetchLinks();
-      } catch (err) {
-        console.error('Error fetching user or links:', err);
-        error.value = 'Failed to load user or links.';
-      }
+    const removeLink = async (linkId) => {
+      await authStore.deleteLink(linkId);
+    };
+
+    watch(() => authStore.links, (newValue) => {
+      links.value = newValue;
     });
 
-    watch(() => userStore.links, (newLinks) => {
-      console.log('Links updated:', newLinks);
-    });
+
+    authStore.fetchUser();
+    authStore.fetchLinks();
 
     return {
-      user: userStore.user,
-      links: userStore.links,
+      user: authStore.user,
+      links,
       newLink,
       addNewLink,
-      error
+      removeLink
     };
   }
 });
 </script>
 
-<style scoped>
-.error {
-  color: red;
+
+<!--<script>-->
+import { defineComponent, ref, watch } from 'vue'; // Импортируем функцию watch
+import { useAuthStore } from '../stores/auth';
+
+export default defineComponent({
+name: 'User',
+setup() {
+const authStore = useAuthStore();
+const newLink = ref('');
+
+const addNewLink = async () => {
+await authStore.addLink(newLink.value);
+newLink.value = '';
+};
+
+const removeLink = async (linkId) => {
+await authStore.deleteLink(linkId);
+};
+
+// Следим за изменениями в списке ссылок и обновляем его
+watch(() => authStore.links, (newValue) => {
+links.value = newValue;
+});
+
+authStore.fetchUser();
+authStore.fetchLinks();
+
+const user = ref(null); // Создаем реактивную переменную для пользователя
+const links = ref([]); // Создаем реактивный массив для ссылок
+
+return {
+user,
+links,
+newLink,
+addNewLink,
+removeLink
+};
 }
+});
+<!--</script>-->
+
+<style scoped>
+
+ul button {
+  width: 9vh;
+  height: 4vh;
+  font-size: 15px;
+}
+
+
 </style>

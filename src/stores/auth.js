@@ -25,10 +25,9 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchUser() {
       try {
-        const token = this.token;
         const response = await axios.get('http://127.0.0.1:8000/api/v1/users/me', {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${this.token}`,
           },
         });
         this.setUser(response.data);
@@ -51,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
     async addLink(link) {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await axios.post('http://127.0.0.1:8000/api/v1/add_link/', { link }, {
+        const response = await axios.post('http://127.0.0.1:8000/api/v1/links/', { url: link }, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -73,6 +72,54 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         console.error(error);
       }
+    },
+
+
+    async deleteLink(linkId) {
+      try {
+        const token = localStorage.getItem('authToken');
+        await axios.delete(`http://127.0.0.1:8000/api/v1/links/${linkId}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.links = this.links.filter(link => link.id !== linkId);
+      } catch (error) {
+        console.error(error);
+      }
     }
+
+
+
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+    // try {
+    //     const response = await axios.post('http://127.0.0.1:8000/api/v1/links/', { url: link });
+    //     this.links.push(response.data);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // },
+
+
+    // async fetchLinks() {
+    //   try {
+    //     const response = await axios.get('http://127.0.0.1:8000/api/v1/links/');
+    //     this.links = response.data;
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
+
