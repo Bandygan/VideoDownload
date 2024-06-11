@@ -1,5 +1,5 @@
 <template>
-  <button @click="setIsOpen(true)">Registration</button>
+  <button @click="setIsOpen(true)" id="regist-m">Registration</button>
 
 
   <Dialog :open="isOpen" @close="setIsOpen">
@@ -13,7 +13,7 @@
               <input type="email" name="username" v-model="username"><br><br>
               <label>Password </label>
               <input type="password" name="password" v-model="password"><br><br>
-              <button type="submit">Регистрация</button>
+              <button type="submit">Registration</button>
             </form>
           </dialog-description>
         </DialogPanel>
@@ -106,10 +106,22 @@ export default {
 
 button{
   background: #272727;
-  width: 30vh;
-  height: 7vh;
-  font-size: 25px;
+  font-size: 20px;
   border-radius: 50px;
+}
+
+#regist-m{
+  background: #333333;
+  border: none;
+  padding: 15px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition-duration: 0.4s;
 }
 
 input{

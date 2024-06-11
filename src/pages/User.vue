@@ -5,10 +5,10 @@
 
     <div v-if="user">
       <h2>Your Links</h2>
-      <ul>
+      <ul class="dark-list">
         <li v-for="link in links" :key="link.id">
           {{ link.url }}
-          <button @click="removeLink(link.id)">Delete</button>
+          <button class="delete-button" @click="removeLink(link.id)">Delete</button>
         </li>
       </ul>
 
@@ -17,16 +17,14 @@
         <input type="url" id="newLink" v-model="newLink" required>
         <button type="submit">Add Link</button>
       </form>
-
-      <button @click="logout">Logout</button>
     </div>
   </div>
 </template>
 
 <script>
-import {defineComponent, ref, watch} from 'vue';
-import {useAuthStore} from '../stores/auth';
-import {useRouter} from 'vue-router'
+import { defineComponent, ref, watch } from 'vue';
+import { useAuthStore } from '../stores/auth';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'User',
@@ -54,7 +52,6 @@ export default defineComponent({
       router.push('/');
     };
 
-
     authStore.fetchUser();
     authStore.fetchLinks();
 
@@ -71,12 +68,41 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
-ul button {
-  width: 9vh;
-  height: 4vh;
-  font-size: 15px;
+/* Стили для списка */
+.dark-list {
+  list-style: none; /* Убираем маркеры списка */
+  padding: 0; /* Убираем внутренние отступы */
 }
 
+.dark-list li {
+  background-color: #333; /* Цвет фона элемента списка */
+  color: #fff; /* Цвет текста элемента списка */
+  padding: 5px; /* Внутренние отступы */
+  margin-bottom: 5px; /* Отступ между элементами списка */
+  border-radius: 5px; /* Закругление углов */
+  display: flex; /* Отображаем элементы списка в строку */
+  align-items: center; /* Выравниваем элементы по вертикали */
+}
 
+/* Стили для кнопок в списке */
+.delete-button {
+  background-color: #ff0000; /* Цвет фона кнопки */
+  color: #fff; /* Цвет текста кнопки */
+  border: none; /* Убираем границу */
+  border-radius: 5px; /* Закругление углов */
+  margin-left: auto; /* Размещаем кнопку справа */
+  cursor: pointer; /* Изменяем курсор при наведении */
+  transition: background-color 0.3s ease; /* Анимация при наведении */
+}
+
+.delete-button:hover {
+  background-color: #cc0000; /* Изменяем цвет фона кнопки при наведении */
+}
+
+button {
+  background: #272727;
+  width: 30vh;
+  height: 7vh;
+  border-radius: 50px;
+}
 </style>

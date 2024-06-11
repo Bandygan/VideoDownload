@@ -1,5 +1,8 @@
 <template>
-  <button @click="setIsOpen(true)">Log In</button>
+  <button v-if="!isLoggedIn" @click="setIsOpen(true)" id="log-m">Login</button>
+
+
+  <button v-if="isLoggedIn" @click="logout" id="log-m">Logout</button>
 
   <Dialog :open="isOpen" @close="setIsOpen">
     <div class="modal-back">
@@ -22,8 +25,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useAuthStore } from '../stores/auth.js';
+import { ref, watch} from 'vue';
+import { useAuthStore} from '../stores/auth.js';
 import { useRouter } from 'vue-router';
 import {
   Dialog,
@@ -38,9 +41,22 @@ const password = ref('');
 const authStore = useAuthStore();
 const router = useRouter();
 
+const isLoggedIn = ref(false);
+
+watch(() => authStore.user, (newValue) => {
+  isLoggedIn.value = !!newValue;
+});
+
+function logout() {
+  authStore.logout();
+  router.push('/');
+}
+
 function setIsOpen(value) {
   isOpen.value = value;
 }
+
+
 
 async function submitForm() {
   try {
@@ -81,11 +97,23 @@ async function submitForm() {
   inset: 0;
 }
 
+#log-m{
+  background: #333333;
+  border: none;
+  padding: 15px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition-duration: 0.4s;
+}
+
 button {
   background: #272727;
-  width: 30vh;
-  height: 7vh;
-  font-size: 25px;
+  font-size: 20px;
   border-radius: 50px;
 }
 

@@ -2,8 +2,6 @@
   <div class="wrapper">
       <div class="wrapper_leftzone">
         <input type="text" placeholder="Get Url"> <br><br>
-        <ModalWindow class="button" :isOpen="isModalOpen" @close="closeModal"/>
-        <LogIn class="button" :isOpen="isModalOpen"/>
       </div>
       <button>Download</button>
     </div>
@@ -11,15 +9,11 @@
 
 <script>
 
-import ModalWindow from "./modal-window.vue";
-import LogIn from "./log-in.vue";
-
 export default {
   name: "download",
 
   components: {
-    ModalWindow,
-    LogIn
+
   },
 }
 </script>
@@ -30,8 +24,7 @@ export default {
   margin-top: 50px;
   align-content: center;
   background: #323443;
-  width: 120vh;
-  height: 130px;
+  height: 100%;
   border-radius: 50px;
   padding: 50px;
   text-align: center;
@@ -64,12 +57,5 @@ export default {
 
 }
 
-.wrapper_leftzone button {
-  margin-top: 10px;
-  margin-right: 20px;
-  width: 150px;
-  height: 50px;
-  font-size: 25px;
-}
 
 </style>

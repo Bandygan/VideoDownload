@@ -9,7 +9,6 @@
     width: 100%;
     min-height: 100vh;
     background: #1E1E1E;
-    display: flex;
-    justify-content: center;
-    text-align: center;
+     text-align: center;
+
 }
