@@ -35,3 +35,47 @@ class LinkDestroyView(generics.DestroyAPIView):
         except Exception as e:
             logger.error(f"Error fetching queryset: {e}")
             raise
+
+
+
+import json
+import requests
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from jwt_project.credentials import TELEGRAM_API_URL
+
+@csrf_exempt
+def telegram_bot(request):
+  if request.method == 'POST':
+    message = json.loads(request.body.decode('utf-8'))
+    chat_id = message['message']['chat']['id']
+    text = message['message']['text']
+    send_message("sendMessage", {
+      'chat_id': f'your message {text}'
+    })
+  return HttpResponse('ok')
+
+def send_message(method, data):
+  return requests.post(TELEGRAM_API_URL + method, data)
+
+
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+from .models import UserProfile
+from rest_framework import status
+
+class BindTelegramView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        user_profile, created = UserProfile.objects.get_or_create(user=user)
+        user_profile.telegram_chat_id = None  # Reset chat ID
+        user_profile.save()
+        # Send a message to the user to start the bot and get the chat ID
+        message = "Please start the Telegram bot and use /start command to complete the binding process."
+        return Response({'message': message}, status=status.HTTP_200_OK)

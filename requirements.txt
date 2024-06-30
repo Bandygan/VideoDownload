@@ -3,3 +3,9 @@ djangorestframework
 djoser
 djangorestframework-simplejwt
 django-cors-headers
+django-environ
+
+
+https://github.com/python-social-auth/social-core/archive/master.zip
+
+social-auth-app-django==2.1.0

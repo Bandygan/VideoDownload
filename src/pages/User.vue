@@ -17,14 +17,20 @@
         <input type="url" id="newLink" v-model="newLink" required>
         <button type="submit">Add Link</button>
       </form>
+
+      <button>
+        <a :href="telegramLink" target="_blank">Bind Telegram</a>
+      </button>
+
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, watch } from 'vue';
-import { useAuthStore } from '../stores/auth';
-import { useRouter } from 'vue-router';
+import {defineComponent, ref, watch} from 'vue';
+import {useAuthStore} from '../stores/auth';
+import {useRouter} from 'vue-router';
+import axios from 'axios';
 
 export default defineComponent({
   name: 'User',
@@ -55,13 +61,35 @@ export default defineComponent({
     authStore.fetchUser();
     authStore.fetchLinks();
 
+
+    const telegramLink = ref('https://t.me/VideoDownloadTG_bot');
+
+    const bindTelegram = async () => {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/v1/bind_telegram/', null, {
+          headers: {
+            Authorization: `Bearer ${authStore.token}`,
+          },
+        });
+        alert(response.data.message);
+
+        // Set the Telegram bot link
+        telegramLink.value = `tg://resolve?domain=your_bot_username`;
+      } catch (error) {
+        console.error('Error binding Telegram:', error);
+      }
+    };
+
+
     return {
       user: authStore.user,
       links,
       newLink,
       addNewLink,
       removeLink,
-      logout
+      logout,
+      bindTelegram,
+      telegramLink,
     };
   }
 });
