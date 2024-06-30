@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,6 +26,16 @@ SECRET_KEY = 'django-insecure-@#7%m8uxc)z_2dc6#c*_vkbr6m5o^@*f&93g9&#lkceh_(@&v&
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+    },
+]
 
 
 import environ

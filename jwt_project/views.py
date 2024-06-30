@@ -68,6 +68,13 @@ from django.shortcuts import get_object_or_404
 from .models import UserProfile
 from rest_framework import status
 
+
+from django.shortcuts import render
+
+def index(request):
+    return render(request, 'index.html')
+
+
 class BindTelegramView(APIView):
     permission_classes = [IsAuthenticated]
 
