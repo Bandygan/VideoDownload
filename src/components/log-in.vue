@@ -1,71 +1,42 @@
 <template>
-  <button v-if="!isLoggedIn" @click="setIsOpen(true)" id="log-m">Login</button>
-
-
-  <button v-if="isLoggedIn" @click="logout" id="log-m">Logout</button>
-
-  <Dialog :open="isOpen" @close="setIsOpen">
-    <div class="modal-back">
-      <div class="box-modal">
-        <DialogPanel class="dialog-box">
-          <DialogTitle>Sign In</DialogTitle>
-          <DialogDescription>
-            <form @submit.prevent="submitForm">
-              <label>Username </label>
-              <input type="text" name="username" v-model="username"><br><br>
-              <label>Password </label>
-              <input type="password" name="password" v-model="password"><br><br>
-              <button type="submit">Log In</button>
-            </form>
-          </DialogDescription>
-        </DialogPanel>
-      </div>
-    </div>
-  </Dialog>
+  <button v-if="authenticated" @click="logout" id="log-m">Logout</button>
+  <div  :hidden="authenticated" ref="telegramLoginWidget"></div>
 </template>
 
 <script setup>
-import { ref, watch} from 'vue';
-import { useAuthStore} from '../stores/auth.js';
-import { useRouter } from 'vue-router';
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  DialogDescription,
-} from '@headlessui/vue';
+import {computed, getCurrentInstance, onMounted, ref, watch} from 'vue';
+import {useAuthStore} from '../stores/auth.js';
+import {useRouter} from 'vue-router';
+import {useCookies} from "vue3-cookies";
 
-const isOpen = ref(false);
-const username = ref('');
-const password = ref('');
 const authStore = useAuthStore();
 const router = useRouter();
+const { cookies } = useCookies();
+const app = getCurrentInstance();
 
-const isLoggedIn = ref(false);
-
-watch(() => authStore.user, (newValue) => {
-  isLoggedIn.value = !!newValue;
-});
+const authenticated = computed(() => authStore.user !== null);
+onMounted(() => {
+  addTelegramWidget();
+})
 
 function logout() {
   authStore.logout();
   router.push('/');
 }
 
-function setIsOpen(value) {
-  isOpen.value = value;
-}
 
 
-
-async function submitForm() {
-  try {
-    await authStore.login(username.value, password.value);
-    setIsOpen(false);
-    router.push('/user');
-  } catch (error) {
-    console.error('Login failed', error);
-  }
+function addTelegramWidget() {
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://telegram.org/js/telegram-widget.js?22';
+  script.setAttribute('data-telegram-login', 'DevelopmentMesenevBot');
+  script.setAttribute('data-size', 'large');
+  script.setAttribute('data-auth-url',
+      'https://c141-35-77-92-44.ngrok-free.app/auth/complete/telegram'
+  );
+  script.setAttribute('data-request-access', 'write');
+  app.refs.telegramLoginWidget.appendChild(script);
 }
 </script>
 
@@ -97,7 +68,7 @@ async function submitForm() {
   inset: 0;
 }
 
-#log-m{
+#log-m {
   background: #333333;
   border: none;
   padding: 15px 25px;

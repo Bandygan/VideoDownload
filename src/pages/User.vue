@@ -18,16 +18,17 @@
         <button type="submit">Add Link</button>
       </form>
 
-      <button>
+      <button v-if="!bound">
         <a :href="telegramLink" target="_blank">Bind Telegram</a>
       </button>
+      <label v-else>connected</label>
 
     </div>
   </div>
 </template>
 
 <script>
-import {defineComponent, ref, watch} from 'vue';
+import {computed, defineComponent, ref, watch} from 'vue';
 import {useAuthStore} from '../stores/auth';
 import {useRouter} from 'vue-router';
 import axios from 'axios';
@@ -39,6 +40,8 @@ export default defineComponent({
     const authStore = useAuthStore();
     const newLink = ref('');
     const router = useRouter();
+    const bound = ref(false);
+    const code = ref("");
 
     const addNewLink = async () => {
       await authStore.addLink(newLink.value);
@@ -57,19 +60,25 @@ export default defineComponent({
       authStore.logout();
       router.push('/');
     };
+    if (authStore.user !== null) {
+      authStore.fetchUser();
+      authStore.fetchLinks();
+    }
+    axios.get('telecode').then((response) => {
+      if (response.data !== "")
+        code.value = response.data;
+      else 
+        bound.value = true;
+    });
 
-    authStore.fetchUser();
-    authStore.fetchLinks();
 
-
-    const telegramLink = ref('https://t.me/VideoDownloadTG_bot');
+    const telegramLink = computed(() => {
+      return `https://telegram.me/DevelopmentMesenevBot?start=${code.value}`;
+    });
 
     const bindTelegram = async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:8000/api/v1/bind_telegram/', null, {
-          headers: {
-            Authorization: `Bearer ${authStore.token}`,
-          },
+        const response = await axios.post('/api/v1/bind_telegram/', null, {
         });
         alert(response.data.message);
 
@@ -90,6 +99,7 @@ export default defineComponent({
       logout,
       bindTelegram,
       telegramLink,
+      bound
     };
   }
 });
