@@ -34,9 +34,9 @@ env = environ.Env(DEBUG=(bool, False))
 root = environ.Path(__file__) - 2
 environ.Env.read_env()
 
-TELEGRAM_BOT_NAME = 'DevelopmentMesenevBot'
-TELEGRAM_BOT_TOKEN = '7309828847:AAFlb0mZYG6pYlv3CgGkT07U3SSZMRmEX5o'
-SOCIAL_AUTH_TELEGRAM_BOT_TOKEN = "7309828847:AAFlb0mZYG6pYlv3CgGkT07U3SSZMRmEX5o"
+TELEGRAM_BOT_NAME = 'VideoDownloadTG_bot'
+TELEGRAM_BOT_TOKEN = '7234654837:AAF_J6GRNPS9EMguhUYFtKXhyjV1FLsCOuI'
+SOCIAL_AUTH_TELEGRAM_BOT_TOKEN = "7234654837:AAF_J6GRNPS9EMguhUYFtKXhyjV1FLsCOuI"
 SECRET_KEY = env.str('SECRET_KEY', '!!! SET YOUR SECRET_KEY !!!')
 LOGIN_REDIRECT_URL = reverse_lazy('profile')
 
@@ -48,10 +48,10 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
-    "https://c141-35-77-92-44.ngrok-free.app"
+    "https://da3c-185-57-28-150.ngrok-free.app"
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://c141-35-77-92-44.ngrok-free.app",
+    "https://da3c-185-57-28-150.ngrok-free.app",
 ]
 SESSION_COOKIE_HTTPONLY = False
 CORS_ALLOW_ALL_ORIGINS = True

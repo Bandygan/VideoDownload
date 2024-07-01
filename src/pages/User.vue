@@ -73,7 +73,7 @@ export default defineComponent({
 
 
     const telegramLink = computed(() => {
-      return `https://telegram.me/DevelopmentMesenevBot?start=${code.value}`;
+      return `https://telegram.me/VideoDownloadTG_bot?start=${code.value}`;
     });
 
     const bindTelegram = async () => {
