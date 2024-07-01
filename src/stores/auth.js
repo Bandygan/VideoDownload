@@ -3,54 +3,34 @@ import axios from 'axios';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: localStorage.getItem('authToken') || null,
     user: null,
     links: []
   }),
   actions: {
-    // Auth actions
-    setToken(token) {
-      this.token = token;
-      localStorage.setItem('authToken', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    },
     setUser(user) {
       this.user = user;
     },
-    logout() {
-      this.token = null;
+    
+    async logout() {
       this.user = null;
-      localStorage.removeItem('authToken');
-      delete axios.defaults.headers.common['Authorization'];
+      await axios.post('logout');
+      // localStorage.removeItem('csrftoken');
     },
+    
     async fetchUser() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/v1/users/me', {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
+        const response = await axios.get('/api/v1/users/me', {
         });
         this.setUser(response.data);
       } catch (error) {
         console.error(error);
       }
     },
-    async login(username, password) {
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/api/v1/jwt/create/', { username, password });
-        this.setToken(response.data.access);
-        await this.fetchUser();
-        return response;
-      } catch (error) {
-        console.error('Login failed', error);
-        throw error;
-      }
-    },
     // User actions
     async addLink(link) {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await axios.post('http://127.0.0.1:8000/api/v1/links/', { url: link }, {
+        const response = await axios.post('/api/v1/links/', { url: link }, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -62,12 +42,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchLinks() {
       try {
-        const token = localStorage.getItem('authToken');
-        const response = await axios.get('http://127.0.0.1:8000/api/v1/links/', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get('/api/v1/links/', );
         this.links = response.data;
       } catch (error) {
         console.error(error);
@@ -78,7 +53,7 @@ export const useAuthStore = defineStore('auth', {
     async deleteLink(linkId) {
       try {
         const token = localStorage.getItem('authToken');
-        await axios.delete(`http://127.0.0.1:8000/api/v1/links/${linkId}/`, {
+        await axios.delete(`/api/v1/links/${linkId}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

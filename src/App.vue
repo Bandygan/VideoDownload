@@ -26,14 +26,17 @@ export default defineComponent({
     const authStore = useAuthStore();
 
     onMounted(async () => {
-      if (authStore.token) {
+      if (userfromback.is_authenticated !== "False") {
         await authStore.fetchUser();
-        await userStore.fetchLinks();
+        await authStore.fetchLinks();
+      }
+      else{
+        authStore.setUser(null);
       }
     });
 
     return {
-      isAuthenticated: authStore.isAuthenticated,
+      isAuthenticated: userfromback.is_authenticated !== "False",
     };
   },
 });

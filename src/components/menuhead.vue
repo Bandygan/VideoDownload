@@ -2,50 +2,37 @@
   <div class="container-head">
 
     <nav class="nav-menu">
-      <router-link to="/" class="nav-button" :class="{ 'router-link-active': $route.path === '/' }">Home</router-link>
-      <router-link to="/user" class="nav-button" :class="{ 'router-link-active': $route.path === '/user' }">User</router-link>
+      <router-link to="/" class="nav-button" :class="{
+        'router-link-active': $route.path === '/' 
+      }">Home
+      </router-link>
+      <router-link to="/user" class="nav-button" :class="{
+        'router-link-active': $route.path === '/user' 
+      }">User
+      </router-link>
     </nav>
 
-    <div class="container-auth">
-      <div ref="telegramLoginWidget"></div>
-      <ModalWindow :isOpen="isModalOpen" @close="closeModal"/>
-      <LogIn :isOpen="isModalOpen"/>
-    </div>
+    <LogIn/>
   </div>
 </template>
 
 <script>
-import ModalWindow from "./modal-window.vue";
 import LogIn from "./log-in.vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from '../stores/auth';
-import { ref } from 'vue';
+import {useRouter} from "vue-router";
+import {useAuthStore} from '../stores/auth';
+import {ref} from 'vue';
 
 export default {
   name: "menuhead",
 
   components: {
-    ModalWindow,
     LogIn
   },
 
   mounted() {
-    this.addTelegramWidget();
   },
 
-  methods: {
-    addTelegramWidget() {
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = 'https://telegram.org/js/telegram-widget.js?22';
-      script.setAttribute('data-telegram-login', 'VideoDownloadTG_bot');
-      script.setAttribute('data-size', 'large');
-      script.setAttribute('data-auth-url', 'https://da3c-185-57-28-150.ngrok-free.app/auth/complete/telegram');
-      script.setAttribute('data-request-access', 'write');
-
-      this.$refs.telegramLoginWidget.appendChild(script);
-    }
-  },
+  methods: {},
 
   setup() {
     const router = useRouter();
@@ -111,5 +98,6 @@ export default {
   color: white;
 }
 
-.container-auth {}
+.container-auth {
+}
 </style>
