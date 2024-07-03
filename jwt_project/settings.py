@@ -7,10 +7,10 @@ from django.urls import reverse_lazy
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-@#7%m8uxc)z_2dc6#c*_vkbr6m5o^@*f&93g9&#lkceh_(@&v&'
-DEBUG = True
+DEBUG = False
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'jwt_project/static'),
-    # os.path.join(BASE_DIR, 'dist')
+    # os.path.join(BASE_DIR, 'jwt_project/static'),
+    os.path.join(BASE_DIR, 'dist')
 ]
 TEMPLATES = [
     {
@@ -48,10 +48,10 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
-    "https://e77d-35-77-92-44.ngrok-free.app"
+    "https://kbvl.ru"
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://e77d-35-77-92-44.ngrok-free.app",
+    "https://kbvl.ru",
 ]
 SESSION_COOKIE_HTTPONLY = False
 CORS_ALLOW_ALL_ORIGINS = True
@@ -63,7 +63,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
-
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -84,6 +88,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -114,7 +119,7 @@ TRANSMISSION_HOST = 'transmission'
 TRANSMISSION_PORT = 9091
 TRANSMISSION_USERNAME = 'VorVZakone'
 TRANSMISSION_PASSWORD = '1234'
-
+STATIC_ROOT = 'static'
 
 CHANNEL_LAYERS = {
     'default': {

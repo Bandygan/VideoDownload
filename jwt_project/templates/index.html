@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="{% static 'assets/index.css' %}"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>toronto-fokino</title>
@@ -13,9 +14,9 @@
     </script>
 </head>
 <body>
-    <div id="app"></div>
-    {% csrf_token %}
-    <script type="module" crossorigin="" src="http://localhost:5173/src/main.js"></script>
+<div id="app"></div>
+{% csrf_token %}
+<script type="module" crossorigin="" src="{% static 'assets/index.js' %}"></script>
 </body>
 </html>
 
