@@ -3,7 +3,7 @@ services:
     container_name: backend
     build:
       context: .
-    image: backend:latest
+    image: registry.mesenev.ru/backend:latest
     command: "sh /application/django-dev.sh"
     volumes:
       - "./:/application"
@@ -28,7 +28,7 @@ services:
   
   beat:
     container_name: beat
-    image: backend:latest
+    image: registry.mesenev.ru/backend:latest
     command: "sh /application/celery.sh"
     volumes:
       - "./:/application"
@@ -42,20 +42,20 @@ services:
       - redis
       - backend
       - transmission
-    telebot:
-      container_name: telebot
-      image: backend:latest
-      command: "python telegram_bot.py"
-      volumes:
-        - "./:/application"
-        - v-download:/downloads
-      working_dir: /application
-      networks:
-        - db-net
-      depends_on:
-        - redis
-        - backend
-        - transmission
+  telebot:
+    container_name: telebot
+    image: registry.mesenev.ru/backend:latest
+    command: "python telegram_bot.py"
+    volumes:
+      - "./:/application"
+      - v-download:/downloads
+    working_dir: /application
+    networks:
+      - db-net
+    depends_on:
+      - redis
+      - backend
+      - transmission
 
   transmission:
     image: lscr.io/linuxserver/transmission:latest
