@@ -34,9 +34,9 @@ env = environ.Env(DEBUG=(bool, False))
 root = environ.Path(__file__) - 2
 environ.Env.read_env()
 
-TELEGRAM_BOT_NAME = 'VideoDownloadTG_bot'
-TELEGRAM_BOT_TOKEN = '7234654837:AAF_J6GRNPS9EMguhUYFtKXhyjV1FLsCOuI'
-SOCIAL_AUTH_TELEGRAM_BOT_TOKEN = "7234654837:AAF_J6GRNPS9EMguhUYFtKXhyjV1FLsCOuI"
+TELEGRAM_BOT_NAME = 'DevelopmentMesenevBot'
+TELEGRAM_BOT_TOKEN = '7309828847:AAFlb0mZYG6pYlv3CgGkT07U3SSZMRmEX5o'
+SOCIAL_AUTH_TELEGRAM_BOT_TOKEN = TELEGRAM_BOT_TOKEN
 SECRET_KEY = env.str('SECRET_KEY', '!!! SET YOUR SECRET_KEY !!!')
 LOGIN_REDIRECT_URL = reverse_lazy('profile')
 
@@ -48,10 +48,10 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
-    "https://da3c-185-57-28-150.ngrok-free.app"
+    "https://e77d-35-77-92-44.ngrok-free.app"
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://da3c-185-57-28-150.ngrok-free.app",
+    "https://e77d-35-77-92-44.ngrok-free.app",
 ]
 SESSION_COOKIE_HTTPONLY = False
 CORS_ALLOW_ALL_ORIGINS = True
@@ -59,6 +59,7 @@ CSRF_EXEMPT_VIEW = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     )
 }
@@ -75,17 +76,20 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework_simplejwt',
     'corsheaders',
+    'celery_app',
     'jwt_project',
     'django_telegram_login',
     'social_django',
 ]
 
 MIDDLEWARE = [
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 ROOT_URLCONF = 'jwt_project.urls'
@@ -104,3 +108,26 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
+
+TRANSMISSION_HOST = 'transmission'
+TRANSMISSION_PORT = 9091
+TRANSMISSION_USERNAME = 'VorVZakone'
+TRANSMISSION_PASSWORD = '1234'
+
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": 'redis://localhost:6379',
+        },
+    },
+}
+
+CELERY_TIMEZONE = 'Asia/Vladivostok'
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'

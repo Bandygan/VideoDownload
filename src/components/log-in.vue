@@ -30,10 +30,10 @@ function addTelegramWidget() {
   const script = document.createElement('script');
   script.async = true;
   script.src = 'https://telegram.org/js/telegram-widget.js?22';
-  script.setAttribute('data-telegram-login', 'VideoDownloadTG_bot');
+  script.setAttribute('data-telegram-login', 'DevelopmentMesenevBot');
   script.setAttribute('data-size', 'large');
   script.setAttribute('data-auth-url',
-      'https://da3c-185-57-28-150.ngrok-free.app/auth/complete/telegram'
+      'https://e77d-35-77-92-44.ngrok-free.app/auth/complete/telegram'
   );
   script.setAttribute('data-request-access', 'write');
   app.refs.telegramLoginWidget.appendChild(script);

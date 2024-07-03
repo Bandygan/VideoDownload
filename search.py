@@ -4,36 +4,32 @@ from transmission_rpc import Client
 from the_python_bay import tpb
 import re
 
-# Настройки Transmission
-TRANSMISSION_HOST = 'localhost'
+TRANSMISSION_HOST = ''
 TRANSMISSION_PORT = 9091
 TRANSMISSION_USERNAME = 'VorVZakone'
 TRANSMISSION_PASSWORD = '1234'
+STATUS_FOUND = 0
+STATUS_NOT_FOUND = 1
+
 
 def find_series_title_next_episode(url):
-    # Отправляем GET запрос на указанный URL
     response = requests.get(url)
-
-    # Проверяем успешность запроса
     if response.status_code == 200:
-        # Создаем объект BeautifulSoup для парсинга HTML
         soup = BeautifulSoup(response.content, 'html.parser')
-
-        # Находим элемент с названием сериала на Next Epizode
         title_element = soup.find('div', id='show_name')
 
         if title_element:
-            # Извлекаем текст названия сериала
             series_title = title_element.text.strip()
-            return series_title
+            return 0, series_title
         else:
-            return "Название сериала не найдено"
+            return 1, "Название сериала не найдено"
     else:
-        return f"Ошибка при запросе страницы: {response.status_code}"
+        return 1, f"Ошибка при запросе страницы: {response.status_code}"
+
 
 def format_search_query(series_title):
-    # Заменяем пробелы на точки и убираем специальные символы
     return re.sub(r'[^\w\s]', '', series_title).replace(' ', '.')
+
 
 def download_last_episode(series_title):
     try:
@@ -48,7 +44,6 @@ def download_last_episode(series_title):
         search_query = format_search_query(series_title)
         results = tpb.search(search_query)
         if results:
-            # Фильтруем результаты, чтобы найти эпизоды сериала
             pattern = re.compile(rf"{re.escape(search_query)}.*S(\d{{2}})E(\d{{2}})", re.IGNORECASE)
             episodes = []
 
@@ -60,7 +55,6 @@ def download_last_episode(series_title):
                     episodes.append((season, episode, result.magnet))
 
             if episodes:
-                # Сортируем эпизоды по номеру сезона и эпизода, чтобы найти последний эпизод
                 episodes.sort(key=lambda x: (x[0], x[1]), reverse=True)
                 last_episode = episodes[0]
                 torrent_url = str(last_episode[2])
@@ -73,6 +67,17 @@ def download_last_episode(series_title):
 
     except Exception as e:
         print(f"Failed to connect or add torrent: {e}")
+
+
+default_headers = {
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
+                  'AppleWebKit/537.36 (KHTML, like Gecko) '
+                  'Chrome/89.0.4356.6 Safari/537.36',
+    'Accept-Encoding': ', '.join(('gzip', 'deflate')),
+    'Accept': '*/*',
+    'Connection': 'keep-alive',
+}
+
 
 if __name__ == "__main__":
     series_url = input("Введите URL сериала на Next Epizode: ")

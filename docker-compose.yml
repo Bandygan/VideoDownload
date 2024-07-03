@@ -1,0 +1,90 @@
+services:
+  backend:
+    container_name: backend
+    build:
+      context: .
+    image: backend:latest
+    command: "sh /application/django-dev.sh"
+    volumes:
+      - "./:/application"
+      - v-download:/downloads
+    working_dir: /application
+    depends_on:
+      - redis
+      - transmission
+    environment:
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "8000:8000"
+    networks:
+      - db-net
+      - nginx-net
+  
+  redis:
+    container_name: redis
+    image: redis:5.0.6-alpine
+    networks:
+      - db-net
+  
+  beat:
+    container_name: beat
+    image: backend:latest
+    command: "sh /application/celery.sh"
+    volumes:
+      - "./:/application"
+      - v-download:/downloads
+    working_dir: /application
+    networks:
+      - db-net
+    ports:
+      - "7999:7999"
+    depends_on:
+      - redis
+      - backend
+      - transmission
+    telebot:
+      container_name: telebot
+      image: backend:latest
+      command: "python telegram_bot.py"
+      volumes:
+        - "./:/application"
+        - v-download:/downloads
+      working_dir: /application
+      networks:
+        - db-net
+      depends_on:
+        - redis
+        - backend
+        - transmission
+
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - TRANSMISSION_WEB_HOME= #optional
+      - USER=VorVZakone #optional
+      - PASS=1234 #optional
+      - WHITELIST= #optional
+      - PEERPORT= #optional
+      - HOST_WHITELIST= #optional
+    volumes:
+      - /path/to/transmission/data:/config
+      - v-download:/downloads
+      - /path/to/watch/folder:/watch
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+    networks:
+      - db-net
+
+networks:
+  db-net:
+  nginx-net:
+    
+volumes:
+  v-download:

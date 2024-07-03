@@ -4,6 +4,8 @@ import random
 
 from django.contrib.auth.decorators import login_required
 from rest_framework import generics, permissions
+
+from celery_app.tasks import get_show_name_by_url
 from .models import Link
 from .serializers import LinkSerializer
 import logging
@@ -34,12 +36,14 @@ class LinkListCreateView(generics.ListCreateAPIView):
             logger.error(f"Error fetching queryset: {e}")
             raise
 
-    def perform_create(self, serializer):
-        try:
-            serializer.save(user=self.request.user)
-        except Exception as e:
-            logger.error(f"Error saving link: {e}")
-            raise
+    def perform_create(self, serializer: LinkSerializer):
+        code, name = get_show_name_by_url(serializer.validated_data['url'])
+        # serializer.save(user=self.request.user, show_name=name)
+        serializer.save(user=self.request.user, show_name="The Boys")
+        if code == 0:
+            serializer.save(show_name=name)
+        else:
+            logger.error(f"Error fetching show name: {name}")
 
 
 class LinkDestroyView(generics.DestroyAPIView):
@@ -47,11 +51,7 @@ class LinkDestroyView(generics.DestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        try:
-            return Link.objects.filter(user=self.request.user)
-        except Exception as e:
-            logger.error(f"Error fetching queryset: {e}")
-            raise
+        return Link.objects.filter(user=self.request.user)
 
 
 @csrf_exempt
